@@ -1,0 +1,16 @@
+{
+  "name": "servekaro",
+  "version": "0.1.0",
+  "description": "Configurable static web server",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "server",
+    "static",
+    "web"
+  ],
+  "author": "Anshul Kharbanda",
+  "license": "MIT"
+}
