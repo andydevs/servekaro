@@ -6,14 +6,24 @@
  * Author:  Anshul Kharbanda
  * Created: 4 - 24 - 2017
  */
+import { expect } from 'chai'
+import ServeKaro from '../src/servekaro'
 
 describe('Serve Karo Server', () => {
+    var server
 
-    it('contains port, host, static, and notfound properties', () => {
-
+    before(() => {
+        server = new ServeKaro()
     })
 
-    it('can be configured using .json file', () => {
+    it('contains port, host, static, and notfound properties set to default values', () => {
+        expect(server.port).to.equal(80)
+        expect(server.host).to.equal('0.0.0.0')
+        expect(server.static).to.equal('public')
+        expect(server.notFound).to.be.null
+    })
+
+    it('can be configured using an object', () => {
 
     })
 
@@ -31,7 +41,7 @@ describe('Serve Karo Server', () => {
 
         // Configure 404 file
         before(() => {
-            
+
         })
 
         it('has notfound property set to null', () => {
