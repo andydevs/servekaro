@@ -10,8 +10,10 @@ import { expect } from 'chai'
 import ServeKaro from '../src/servekaro'
 
 describe('Serve Karo Server', () => {
+    // Server handle
     var server
 
+    // Instantiate server
     before(() => {
         server = new ServeKaro()
     })
@@ -24,17 +26,20 @@ describe('Serve Karo Server', () => {
     })
 
     it('can be configured using an object', () => {
-
+        server.configure({
+            port: 8080,
+            host: 'localhost',
+            static: 'exp' })
+        expect(server.port).to.equal(8080)
+        expect(server.host).to.equal('localhost')
+        expect(server.static).to.equal('exp')
+        expect(server.notFound).to.be.null
     })
 
     context('when started', () => {
-
         it('serves files from the configured directory', (done) => {
-
             done()
-
         })
-
     })
 
     context('when not given notFound information', () => {
