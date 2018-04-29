@@ -6,8 +6,14 @@
  * Author:  Anshul Kharbanda
  * Created: 4 - 24 - 2017
  */
-import { expect } from 'chai'
+import chai, { expect } from 'chai'
+import chaiHttp from 'chai-http'
 import ServeKaro from '../src/servekaro'
+import path from 'path'
+import fs from 'fs'
+
+// Configure chai
+chai.use(chaiHttp)
 
 describe('Serve Karo Server', () => {
     // Server handle
@@ -30,29 +36,39 @@ describe('Serve Karo Server', () => {
     it('can be configured using an object', () => {
         server.configure({
             port: 8080,
-            host: 'localhost',
+            host: '127.0.0.1',
             static: 'exp' })
         expect(server.port).to.equal(8080)
-        expect(server.host).to.equal('localhost')
+        expect(server.host).to.equal('127.0.0.1')
         expect(server.static).to.equal('exp')
         expect(server.notFound).to.be.null
     })
 
+    // Test ._filepath method
+    it('returns a filepath given an http url', () => {
+        expect(server._filepath('/index.html')).to.equal(path.join('exp', 'index.html'))
+    })
+
+    // Test address info
+    it('serves on the configured port and host', (done) => {
+        server.serve(() => {
+            expect(server.address().port).to.equal(server.port)
+            expect(server.address().address).to.equal(server.host)
+            server.close(done)
+        })
+    })
+
     // Test serving files
-    context('when started', () => {
-        // Start server
-        before((done) => {
-            done()
-        })
-
-        // Run test
-        it('serves files from the configured directory', (done) => {
-            done()
-        })
-
-        // Close server
-        after((done) => {
-            done()
+    it('serves files from the configured directory', (done) => {
+        server.serve(() => {
+            chai.request(server)
+                .get('/index.html')
+                .end((err, result) => {
+                    expect(err).to.not.exist
+                    expect(result).to.have.status(200)
+                    expect(result.text).to.equal(fs.readFileSync('exp/index.html', {encoding: 'utf-8'}))
+                    done()
+                })
         })
     })
 
@@ -64,23 +80,9 @@ describe('Serve Karo Server', () => {
         it('has notfound property set to null', () => {})
 
         // Test 404 serve
-        context('when started', () => {
-            // Start server
-            before((done) => {
-                done()
-            })
-
-            // Run test
-            it('serves default not found message with status 404 if given url is not found', (done) => {
-                done()
-            })
-
-            // Close server
-            after((done) => {
-                done()
-            })
+        it('serves default not found message with status 404 if given url is not found', (done) => {
+            done()
         })
-
     })
 
     context('when given notFound filename', () => {
@@ -91,23 +93,9 @@ describe('Serve Karo Server', () => {
         it('has notfound property set to filename', () => {})
 
         // Test 404
-        context('when started', () => {
-            // Start server
-            before((done) => {
-                done()
-            })
-
-            // Run test
-            it('serves the notFound file with status 404 if given url is not found', (done) => {
-                done()
-            })
-
-            // Close server
-            after((done) => {
-                done()
-            })
+        it('serves the notFound file with status 404 if given url is not found', (done) => {
+            done()
         })
-
     })
 
     context('when given notFound object with filename and status', () => {
@@ -118,22 +106,8 @@ describe('Serve Karo Server', () => {
         it('has notfound property set to filename', () => {})
 
         // Test serve 404
-        context('when started', () => {
-            // Start server
-            before((done) => {
-                done()
-            })
-
-            // Run test
-            it('serves the notFound file with notFound status if given url is not found', (done) => {
-                done()
-            })
-
-            // Close server
-            after((done) => {
-                done()
-            })
+        it('serves the notFound file with notFound status if given url is not found', (done) => {
+            done()
         })
-
     })
 })
