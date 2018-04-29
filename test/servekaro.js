@@ -18,6 +18,7 @@ describe('Serve Karo Server', () => {
         server = new ServeKaro()
     })
 
+    // Test default properties
     it('contains port, host, static, and notfound properties set to default values', () => {
         expect(server.port).to.equal(80)
         expect(server.host).to.equal('0.0.0.0')
@@ -25,6 +26,7 @@ describe('Serve Karo Server', () => {
         expect(server.notFound).to.be.null
     })
 
+    // Test .configure method
     it('can be configured using an object', () => {
         server.configure({
             port: 8080,
@@ -36,77 +38,101 @@ describe('Serve Karo Server', () => {
         expect(server.notFound).to.be.null
     })
 
+    // Test serving files
     context('when started', () => {
+        // Start server
+        before((done) => {
+            done()
+        })
+
+        // Run test
         it('serves files from the configured directory', (done) => {
+            done()
+        })
+
+        // Close server
+        after((done) => {
             done()
         })
     })
 
     context('when not given notFound information', () => {
-
         // Configure 404 file
-        before(() => {
+        before(() => {})
 
-        })
+        // Check property
+        it('has notfound property set to null', () => {})
 
-        it('has notfound property set to null', () => {
-
-        })
-
+        // Test 404 serve
         context('when started', () => {
-
-            it('serves default not found message with status 404 if given url is not found', (done) => {
-
+            // Start server
+            before((done) => {
                 done()
-
             })
 
+            // Run test
+            it('serves default not found message with status 404 if given url is not found', (done) => {
+                done()
+            })
+
+            // Close server
+            after((done) => {
+                done()
+            })
         })
 
     })
 
     context('when given notFound filename', () => {
-
         // Configure 404 file
-        before(() => {
+        before(() => {})
 
-        })
+        // Check property
+        it('has notfound property set to filename', () => {})
 
-        it('has notfound property set to filename', () => {
-
-        })
-
+        // Test 404
         context('when started', () => {
-
-            it('serves the notFound file with status 404 if given url is not found', (done) => {
-
+            // Start server
+            before((done) => {
                 done()
-
             })
 
+            // Run test
+            it('serves the notFound file with status 404 if given url is not found', (done) => {
+                done()
+            })
+
+            // Close server
+            after((done) => {
+                done()
+            })
         })
 
     })
 
     context('when given notFound object with filename and status', () => {
-
         // Configure 404 file
-        before(() => {
+        before(() => {})
 
-        })
+        // Check property
+        it('has notfound property set to filename', () => {})
 
-        it('has notfound property set to filename', () => {
-
-        })
-
+        // Test serve 404
         context('when started', () => {
-
-            it('serves the notFound file with notFound status if given url is not found', (done) => {
-
+            // Start server
+            before((done) => {
                 done()
-
             })
 
+            // Run test
+            it('serves the notFound file with notFound status if given url is not found', (done) => {
+                done()
+            })
+
+            // Close server
+            after((done) => {
+                done()
+            })
         })
 
     })
