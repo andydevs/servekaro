@@ -63,8 +63,8 @@ describe('Serve Karo Server', () => {
         server.serve(() => {
             chai.request(server)
                 .get('/index.html')
-                .end((err, result) => {
-                    expect(err).to.not.exist
+                .end((error, result) => {
+                    expect(error).to.not.exist
                     expect(result).to.have.status(200)
                     expect(result.text).to.equal(fs.readFileSync('exp/index.html', {encoding: 'utf-8'}))
                     done()
@@ -74,23 +74,26 @@ describe('Serve Karo Server', () => {
 
     context('when not given notFound information', () => {
         // Configure 404 file
-        before(() => {})
-
-        // Check property
-        it('has notfound property set to null', () => {})
+        before(() => { server.notFound = null })
 
         // Test 404 serve
         it('serves default not found message with status 404 if given url is not found', (done) => {
-            done()
+            server.serve(() => {
+                chai.request(server)
+                    .get('/notexistant.lmth')
+                    .end((error, result) => {
+                        expect(error).to.not.exist
+                        expect(result).to.have.status(404)
+                        expect(result.text).to.equal('File not found!')
+                        done()
+                    })
+            })
         })
     })
 
     context('when given notFound filename', () => {
         // Configure 404 file
         before(() => {})
-
-        // Check property
-        it('has notfound property set to filename', () => {})
 
         // Test 404
         it('serves the notFound file with status 404 if given url is not found', (done) => {
@@ -101,9 +104,6 @@ describe('Serve Karo Server', () => {
     context('when given notFound object with filename and status', () => {
         // Configure 404 file
         before(() => {})
-
-        // Check property
-        it('has notfound property set to filename', () => {})
 
         // Test serve 404
         it('serves the notFound file with notFound status if given url is not found', (done) => {

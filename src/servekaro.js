@@ -83,12 +83,13 @@ export default class ServeKaro extends http.Server {
      */
     _requestHandler(request, response) {
         fs.stat(this._filepath(request.url), (error, stats) => {
-            // Report error if error
-            if (error) this._reportError(error, response)
+            if (error)
+                // Send not found information if file is not found
+                if (error.code === 'ENOENT') this._reportNotFound(response)
+                // Report error if error
+                else this._reportError(error, response)
             // Send user the file if requested file exists
-            else if (stats.isFile()) this._sendFile(request, response)
-            // Send not found information if file is not found
-            else this._notFound(response)
+            else this._sendFile(request, response)
         })
     }
 
@@ -125,7 +126,7 @@ export default class ServeKaro extends http.Server {
      *
      * @param response {http.ServerResponse} the outgoing response
      */
-    _notFound(response) {
+    _reportNotFound(response) {
         response.writeHead(404, { 'Content-Type' : 'text/plain' })
         response.write('File not found!')
         response.end()
