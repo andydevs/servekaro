@@ -82,20 +82,53 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _requestHandler(request, response) {
-        fs.stat(this._filepath(request.url), (err, stat) => {
-            if (err) {
-                response.writeHead(500, { 'Content-Type' : 'text/plain' })
-                response.write('Internal Server Error!: ' + err.toString())
-                response.end()
-            } else if (stat.isFile()) {
-                fs.createReadStream(this._filepath(request.url))
-                  .pipe(response)
-            } else {
-                response.writeHead(404, { 'Content-Type' : 'text/plain' })
-                response.write('File not found!: ' + request.url)
-                response.end()
-            }
+        fs.stat(this._filepath(request.url), (error, stats) => {
+            // Report error if error
+            if (error) this._reportError(error, response)
+            // Send user the file if requested file exists
+            else if (stats.isFile()) this._sendFile(request, response)
+            // Send not found information if file is not found
+            else this._notFound(response)
         })
+    }
+
+    /**
+     * @private
+     *
+     * Reports an internal server error to the user
+     *
+     * @param error {Error} the error to report
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _reportError(error, response) {
+        response.writeHead(500, { 'Content-Type': 'text/plain' })
+        response.write('Internal server error!: ' + error.toString())
+        response.end()
+    }
+
+    /**
+     * @private
+     *
+     * Sends requested file to response
+     *
+     * @param request {http.IncomingMessage} the incoming request
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _sendFile(request, response) {
+        fs.createReadStream(this._filepath(request.url)).pipe(response)
+    }
+
+    /**
+     * @private
+     *
+     * Handle not found
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _notFound(response) {
+        response.writeHead(404, { 'Content-Type' : 'text/plain' })
+        response.write('File not found!')
+        response.end()
     }
 
     /**
