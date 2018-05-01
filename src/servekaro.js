@@ -39,6 +39,8 @@ export default class ServeKaro extends http.Server {
         this.configure = this.configure.bind(this)
         this.serve = this.serve.bind(this)
         this._handleRequest = this._handleRequest.bind(this)
+        this._handleRequestRoot = this._handleRequestRoot.bind(this)
+        this._handleRequestDefault = this._handleRequestDefault.bind(this)
         this._handleError = this._handleError.bind(this)
         this._sendFile = this._sendFile.bind(this)
         this._handleNotFound = this._handleNotFound.bind(this)
