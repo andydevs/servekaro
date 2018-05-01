@@ -49,8 +49,8 @@ describe('Serve Karo Server', () => {
         expect(server._filepath('/index.html')).to.equal(path.join('exp', 'index.html'))
     })
 
-    // Test address info
-    it('serves on the configured port and host', (done) => {
+    // Test address info on .serve
+    it('serves on the configured port and host when .serve is called', (done) => {
         server.serve(() => {
             expect(server.address().port).to.equal(server.port)
             expect(server.address().address).to.equal(server.host)
@@ -93,11 +93,20 @@ describe('Serve Karo Server', () => {
 
     context('when given notFound filename', () => {
         // Configure 404 file
-        before(() => {})
+        before(() => { server.notFound = '404.html' })
 
         // Test 404
         it('serves the notFound file with status 404 if given url is not found', (done) => {
-            done()
+            server.serve(() => {
+                chai.request(server)
+                    .get('/totallynotreal.lmao')
+                    .end((error, result) => {
+                        expect(error).to.not.exist
+                        expect(result).to.have.status(404)
+                        expect(result.text).to.equal(fs.readFileSync('exp/404.html', {encoding: 'utf-8'}))
+                        done()
+                    })
+            })
         })
     })
 

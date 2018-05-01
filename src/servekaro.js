@@ -82,14 +82,13 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _requestHandler(request, response) {
-        fs.stat(this._filepath(request.url), (error, stats) => {
-            if (error)
-                // Send not found information if file is not found
-                if (error.code === 'ENOENT') this._reportNotFound(response)
-                // Report error if error
-                else this._reportError(error, response)
-            // Send user the file if requested file exists
-            else this._sendFile(request, response)
+        this._exists(this._filepath(request.url), (error, exists) => {
+            // Report error if there is one
+            if (error) this._reportError(error, response)
+            // Send file if it exists
+            else if (exists) this._sendFile(request.url, response)
+            // Send not found response
+            else this._reportNotFound(response)
         })
     }
 
@@ -112,11 +111,13 @@ export default class ServeKaro extends http.Server {
      *
      * Sends requested file to response
      *
-     * @param request {http.IncomingMessage} the incoming request
+     * @param url {String} the url string
      * @param response {http.ServerResponse} the outgoing response
+     * @param status {int} the status to write to response
      */
-    _sendFile(request, response) {
-        fs.createReadStream(this._filepath(request.url)).pipe(response)
+    _sendFile(url, response, status=200) {
+        response.writeHead(status)
+        fs.createReadStream(this._filepath(url)).pipe(response)
     }
 
     /**
@@ -127,6 +128,28 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _reportNotFound(response) {
+        // Send given 404 string if given
+        if (typeof(this.notFound) === 'string')
+            this._exists(this._filepath(this.notFound), (error, exists) => {
+                // Report error if there is one
+                if (error) this._reportError(error, response)
+                // Send 404 file if it exists
+                else if (exists) this._sendFile(this.notFound, response, 404)
+                // Send default 404 otherwise
+                else this._reportNotFoundDefault(response)
+            })
+        // Send default file
+        else this._reportNotFoundDefault(response)
+    }
+
+    /**
+     * @private
+     *
+     * Default handler for not found
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _reportNotFoundDefault(response) {
         response.writeHead(404, { 'Content-Type' : 'text/plain' })
         response.write('File not found!')
         response.end()
@@ -143,5 +166,29 @@ export default class ServeKaro extends http.Server {
      */
     _filepath(url) {
         return path.join(this.static, url)
+    }
+
+    /**
+     * @private
+     *
+     * Check if the file exists and return boolean
+     * (since fs.exists is deprecated)
+     *
+     * @param path {String} the path to check
+     * @param callback {Function} callback to responds to exists
+     */
+    _exists(file, callback) {
+        fs.stat(file, (error, stat) => {
+            // Check error
+            if (error)
+                // ENOENT (Error No Entry) indicates file does not exist
+                if (error.code === 'ENOENT') callback(null, false)
+                // Other errors are just system errors
+                else callback(error, false)
+            // Url exists if stat is file
+            else if (stat.isFile()) callback(null, true)
+            // Else url does not exist
+            else callback(null, false)
+        })
     }
 }
