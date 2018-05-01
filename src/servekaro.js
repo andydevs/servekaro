@@ -9,6 +9,7 @@
 import http from 'http'
 import path from 'path'
 import fs from 'fs'
+import { exists, filterKeys } from './helper'
 
 // Keys that can be configured
 const CONFIG_KEYS = [ 'port', 'host', 'root', 'serving', 'notFound' ]
@@ -45,7 +46,6 @@ export default class ServeKaro extends http.Server {
         this._handleNotFoundObject = this._handleNotFoundObject.bind(this)
         this._handleNotFoundDefault = this._handleNotFoundDefault.bind(this)
         this._filepath = this._filepath.bind(this)
-        this._exists = this._exists.bind(this)
 
         // Set events
         this.on('request', this._handleRequest)
@@ -57,22 +57,18 @@ export default class ServeKaro extends http.Server {
      * @param opts {Object} the options object
      */
     configure(opts) {
-        // Filter CONFIG_KEYS from object
-        let trueOpts = Object.entries(opts)
-            .filter(([key, value]) => CONFIG_KEYS.includes(key))
-            .reduce((obj, [key, val]) => Object.assign(obj, {[key]: val}), {})
-
-        // Assign keys to ServeKaro
-        Object.assign(this, trueOpts)
+        Object.assign(this, filterKeys(opts, CONFIG_KEYS))
     }
 
     /**
      * Serves content from server
      *
      * @param callback {Function} callback handler for server
+     *
+     * @return http server created
      */
     serve(callback) {
-        this.listen({ port: this.port, host: this.host }, callback)
+        return this.listen({ port: this.port, host: this.host }, callback)
     }
 
     /**
@@ -86,7 +82,7 @@ export default class ServeKaro extends http.Server {
     _handleRequest(request, response) {
         // Send root if accessing root folder
         if (request.url === '/')
-            this._exists(this._filepath(this.root), (error, exists) => {
+            exists(this._filepath(this.root), (error, exists) => {
                 // Report error if there is one
                 if (error) this._handleError(error, response)
                 // Send root file if it exists
@@ -96,7 +92,7 @@ export default class ServeKaro extends http.Server {
             })
         // Send file
         else
-            this._exists(this._filepath(request.url), (error, exists) => {
+            exists(this._filepath(request.url), (error, exists) => {
                 // Report error if there is one
                 if (error) this._handleError(error, response)
                 // Send file if it exists
@@ -158,7 +154,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleNotFoundString(response) {
-        this._exists(this._filepath(this.notFound), (error, exists) => {
+        exists(this._filepath(this.notFound), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send 404 file if it exists
@@ -176,7 +172,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleNotFoundObject(response) {
-        this._exists(this._filepath(this.notFound.file), (error, exists) => {
+        exists(this._filepath(this.notFound.file), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send 404 file if it exists
@@ -211,29 +207,5 @@ export default class ServeKaro extends http.Server {
      */
     _filepath(url) {
         return path.join(this.serving, url)
-    }
-
-    /**
-     * @private
-     *
-     * Check if the file exists and return boolean
-     * (since fs.exists is deprecated)
-     *
-     * @param path {String} the path to check
-     * @param callback {Function} callback to responds to exists
-     */
-    _exists(file, callback) {
-        fs.stat(file, (error, stat) => {
-            // Check error
-            if (error)
-                // ENOENT (Error No Entry) indicates file does not exist
-                if (error.code === 'ENOENT') callback(null, false)
-                // Other errors are just system errors
-                else callback(error, false)
-            // Url exists if stat is file
-            else if (stat.isFile()) callback(null, true)
-            // Else url does not exist
-            else callback(null, false)
-        })
     }
 }
