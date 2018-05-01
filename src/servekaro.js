@@ -128,13 +128,24 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _reportNotFound(response) {
-        // Send given 404 string if given
+        // Send given filename with 404 status if given string
         if (typeof(this.notFound) === 'string')
             this._exists(this._filepath(this.notFound), (error, exists) => {
                 // Report error if there is one
                 if (error) this._reportError(error, response)
                 // Send 404 file if it exists
                 else if (exists) this._sendFile(this.notFound, response, 404)
+                // Send default 404 otherwise
+                else this._reportNotFoundDefault(response)
+            })
+        // Send given filename with given status if given object
+        else if (this.notFound)
+            this._exists(this._filepath(this.notFound.file), (error, exists) => {
+                // Report error if there is one
+                if (error) this._reportError(error, response)
+                // Send 404 file if it exists
+                else if (exists) this._sendFile(
+                    this.notFound.file, response, this.notFound.status)
                 // Send default 404 otherwise
                 else this._reportNotFoundDefault(response)
             })

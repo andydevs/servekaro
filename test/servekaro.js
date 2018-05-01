@@ -111,11 +111,18 @@ describe('Serve Karo Server', () => {
     // Test object 404
     context('when given notFound object with filename and status', () => {
         // Configure 404 file
-        before(() => {})
+        before(() => { server.notFound = { file: 'index.html', status: 200 } })
 
         // Test serve 404
         it('serves the notFound file with notFound status if given url is not found', (done) => {
-            done()
+            chai.request(server)
+                .get('/icantbelieveitsnot.butter')
+                .end((error, result) => {
+                    expect(error).to.not.exist
+                    expect(result).to.have.status(200)
+                    expect(result.text).to.be.fromFile('exp/index.html')
+                    done()
+                })
         })
     })
 })
