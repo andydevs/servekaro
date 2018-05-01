@@ -81,25 +81,45 @@ export default class ServeKaro extends http.Server {
      */
     _handleRequest(request, response) {
         // Send root if accessing root folder
-        if (request.url === '/')
-            exists(this._filepath(this.root), (error, exists) => {
-                // Report error if there is one
-                if (error) this._handleError(error, response)
-                // Send root file if it exists
-                else if (exists) this._sendFile(this.root, response)
-                // Send not found response
-                else this._handleNotFound(response)
-            })
-        // Send file
-        else
-            exists(this._filepath(request.url), (error, exists) => {
-                // Report error if there is one
-                if (error) this._handleError(error, response)
-                // Send file if it exists
-                else if (exists) this._sendFile(request.url, response)
-                // Send not found response
-                else this._handleNotFound(response)
-            })
+        if (request.url === '/') this._handleRequestRoot(response)
+        // Handle default request
+        else this._handleRequestDefault(request, response)
+    }
+
+    /**
+     * @private
+     *
+     * Handler for http root request
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _handleRequestRoot(response) {
+        exists(this._filepath(this.root), (error, exists) => {
+            // Report error if there is one
+            if (error) this._handleError(error, response)
+            // Send root file if it exists
+            else if (exists) this._sendFile(this.root, response)
+            // Send not found response
+            else this._handleNotFound(response)
+        })
+    }
+
+    /**
+     * @private
+     *
+     * Default handler for http request
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _handleRequestDefault(request, response) {
+        exists(this._filepath(request.url), (error, exists) => {
+            // Report error if there is one
+            if (error) this._handleError(error, response)
+            // Send file if it exists
+            else if (exists) this._sendFile(request.url, response)
+            // Send not found response
+            else this._handleNotFound(response)
+        })
     }
 
     /**
