@@ -27,10 +27,10 @@ describe('Serve Karo Server', () => {
     })
 
     // Test default properties
-    it('contains port, host, static, and notfound properties set to default values', () => {
+    it('contains port, host, serving, and notfound properties set to default values', () => {
         expect(server.port).to.equal(80)
         expect(server.host).to.equal('0.0.0.0')
-        expect(server.static).to.equal('public')
+        expect(server.serving).to.equal('public')
         expect(server.root).to.equal('index.html')
         expect(server.notFound).to.be.null
     })
@@ -41,12 +41,12 @@ describe('Serve Karo Server', () => {
             port: 8080,
             host: 'localhost',
             root: 'main.html',
-            static: 'exp',
+            serving: 'exp',
             notFound: '404.html',
             bogus: 'phony' })
         expect(server.port).to.equal(8080)
         expect(server.host).to.equal('localhost')
-        expect(server.static).to.equal('exp')
+        expect(server.serving).to.equal('exp')
         expect(server.root).to.equal('main.html')
         expect(server.notFound).to.equal('404.html')
         expect(server.bogus).to.not.exist

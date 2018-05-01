@@ -11,7 +11,7 @@ import path from 'path'
 import fs from 'fs'
 
 // Keys that can be configured
-const CONFIG_KEYS = [ 'port', 'host', 'root', 'static', 'notFound' ]
+const CONFIG_KEYS = [ 'port', 'host', 'root', 'serving', 'notFound' ]
 
 /**
  * Main server class
@@ -30,7 +30,7 @@ export default class ServeKaro extends http.Server {
         // Default properties
         this.port = 80
         this.host = '0.0.0.0'
-        this.static = 'public'
+        this.serving = 'public'
         this.root = 'index.html'
         this.notFound = null
 
@@ -203,14 +203,14 @@ export default class ServeKaro extends http.Server {
     /**
      * @private
      *
-     * Returns the filepath including static dir given the url
+     * Returns the filepath including serving dir given the url
      *
      * @param url {String} the url from the http request
      *
-     * @return the filepath including static dir
+     * @return the filepath including serving dir
      */
     _filepath(url) {
-        return path.join(this.static, url)
+        return path.join(this.serving, url)
     }
 
     /**
