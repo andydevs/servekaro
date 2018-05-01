@@ -90,13 +90,11 @@ describe('Serve Karo Server', () => {
             })
     })
 
-    // Test null 404
-    context('when not given notFound information', () => {
-        // Configure 404 file
-        before(() => { server.notFound = null })
-
-        // Test 404 serve
-        it('serves default not found message with status 404 if given url is not found', (done) => {
+    // Test 404 serve
+    context('when given url is not found', () => {
+        // Test null 404
+        it('serves default not found message with status 404 if notFound is null', (done) => {
+            server.notFound = null
             chai.request(server)
                 .get('/notexistant.lmth')
                 .end((error, result) => {
@@ -106,15 +104,10 @@ describe('Serve Karo Server', () => {
                     done()
                 })
         })
-    })
 
-    // Test filename 404
-    context('when given notFound filename', () => {
-        // Configure 404 file
-        before(() => { server.notFound = '404.html' })
-
-        // Test 404
-        it('serves the notFound file with status 404 if given url is not found', (done) => {
+        // Test filename 404
+        it('serves the given notFound file with status 404 if notFound is a string filename', (done) => {
+            server.notFound = '404.html'
             chai.request(server)
                 .get('/totallynotreal.lmao')
                 .end((error, result) => {
@@ -124,15 +117,10 @@ describe('Serve Karo Server', () => {
                     done()
                 })
         })
-    })
 
-    // Test object 404
-    context('when given notFound object with filename and status', () => {
-        // Configure 404 file
-        before(() => { server.notFound = { file: 'index.html', status: 200 } })
-
-        // Test serve 404
-        it('serves the notFound file with notFound status if given url is not found', (done) => {
+        // Test object 404
+        it('serves the notFound file with notFound status if notFound is object with filename and status', (done) => {
+            server.notFound = { status: 200, file: 'index.html' }
             chai.request(server)
                 .get('/icantbelieveitsnot.butter')
                 .end((error, result) => {
