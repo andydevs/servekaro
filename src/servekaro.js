@@ -37,16 +37,18 @@ export default class ServeKaro extends http.Server {
         // Bind methods
         this.configure = this.configure.bind(this)
         this.serve = this.serve.bind(this)
-        this._requestHandler = this._requestHandler.bind(this)
-        this._reportError = this._reportError.bind(this)
+        this._handleRequest = this._handleRequest.bind(this)
+        this._handleError = this._handleError.bind(this)
         this._sendFile = this._sendFile.bind(this)
-        this._reportNotFound = this._reportNotFound.bind(this)
-        this._reportNotFoundDefault = this._reportNotFoundDefault.bind(this)
+        this._handleNotFound = this._handleNotFound.bind(this)
+        this._handleNotFoundString = this._handleNotFoundString.bind(this)
+        this._handleNotFoundObject = this._handleNotFoundObject.bind(this)
+        this._handleNotFoundDefault = this._handleNotFoundDefault.bind(this)
         this._filepath = this._filepath.bind(this)
         this._exists = this._exists.bind(this)
 
         // Set events
-        this.on('request', this._requestHandler)
+        this.on('request', this._handleRequest)
     }
 
     /**
@@ -81,26 +83,26 @@ export default class ServeKaro extends http.Server {
      * @param request {http.IncomingMessage} the incoming request
      * @param response {http.ServerResponse} the outgoing response
      */
-    _requestHandler(request, response) {
+    _handleRequest(request, response) {
         // Send root if accessing root folder
         if (request.url === '/')
             this._exists(this._filepath(this.root), (error, exists) => {
                 // Report error if there is one
-                if (error) this._reportError(error, response)
+                if (error) this._handleError(error, response)
                 // Send root file if it exists
                 else if (exists) this._sendFile(this.root, response)
                 // Send not found response
-                else this._reportNotFound(response)
+                else this._handleNotFound(response)
             })
         // Send file
         else
             this._exists(this._filepath(request.url), (error, exists) => {
                 // Report error if there is one
-                if (error) this._reportError(error, response)
+                if (error) this._handleError(error, response)
                 // Send file if it exists
                 else if (exists) this._sendFile(request.url, response)
                 // Send not found response
-                else this._reportNotFound(response)
+                else this._handleNotFound(response)
             })
     }
 
@@ -112,7 +114,7 @@ export default class ServeKaro extends http.Server {
      * @param error {Error} the error to report
      * @param response {http.ServerResponse} the outgoing response
      */
-    _reportError(error, response) {
+    _handleError(error, response) {
         response.writeHead(500, { 'Content-Type': 'text/plain' })
         response.write('Internal server error!: ' + error.toString())
         response.end()
@@ -139,30 +141,50 @@ export default class ServeKaro extends http.Server {
      *
      * @param response {http.ServerResponse} the outgoing response
      */
-    _reportNotFound(response) {
+    _handleNotFound(response) {
         // Send given filename with 404 status if given string
-        if (typeof(this.notFound) === 'string')
-            this._exists(this._filepath(this.notFound), (error, exists) => {
-                // Report error if there is one
-                if (error) this._reportError(error, response)
-                // Send 404 file if it exists
-                else if (exists) this._sendFile(this.notFound, response, 404)
-                // Send default 404 otherwise
-                else this._reportNotFoundDefault(response)
-            })
+        if (typeof(this.notFound) === 'string') this._handleNotFoundString(response)
         // Send given filename with given status if given object
-        else if (this.notFound)
-            this._exists(this._filepath(this.notFound.file), (error, exists) => {
-                // Report error if there is one
-                if (error) this._reportError(error, response)
-                // Send 404 file if it exists
-                else if (exists) this._sendFile(
-                    this.notFound.file, response, this.notFound.status)
-                // Send default 404 otherwise
-                else this._reportNotFoundDefault(response)
-            })
+        else if (this.notFound) this._handleNotFoundObject(response)
         // Send default file
-        else this._reportNotFoundDefault(response)
+        else this._handleNotFoundDefault(response)
+    }
+
+    /**
+     * @private
+     *
+     * Handle not found string property
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _handleNotFoundString(response) {
+        this._exists(this._filepath(this.notFound), (error, exists) => {
+            // Report error if there is one
+            if (error) this._handleError(error, response)
+            // Send 404 file if it exists
+            else if (exists) this._sendFile(this.notFound, response, 404)
+            // Send default 404 otherwise
+            else this._handleNotFoundDefault(response)
+        })
+    }
+
+    /**
+     * @private
+     *
+     * Handle not found object property
+     *
+     * @param response {http.ServerResponse} the outgoing response
+     */
+    _handleNotFoundObject(response) {
+        this._exists(this._filepath(this.notFound.file), (error, exists) => {
+            // Report error if there is one
+            if (error) this._handleError(error, response)
+            // Send 404 file if it exists
+            else if (exists) this._sendFile(
+                this.notFound.file, response, this.notFound.status)
+            // Send default 404 otherwise
+            else this._handleNotFoundDefault(response)
+        })
     }
 
     /**
@@ -172,7 +194,7 @@ export default class ServeKaro extends http.Server {
      *
      * @param response {http.ServerResponse} the outgoing response
      */
-    _reportNotFoundDefault(response) {
+    _handleNotFoundDefault(response) {
         response.writeHead(404, { 'Content-Type' : 'text/plain' })
         response.write('File not found!')
         response.end()
