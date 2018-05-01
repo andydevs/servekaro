@@ -82,14 +82,26 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _requestHandler(request, response) {
-        this._exists(this._filepath(request.url), (error, exists) => {
-            // Report error if there is one
-            if (error) this._reportError(error, response)
-            // Send file if it exists
-            else if (exists) this._sendFile(request.url, response)
-            // Send not found response
-            else this._reportNotFound(response)
-        })
+        // Send root if accessing root folder
+        if (request.url === '/')
+            this._exists(this._filepath(this.root), (error, exists) => {
+                // Report error if there is one
+                if (error) this._reportError(error, response)
+                // Send root file if it exists
+                else if (exists) this._sendFile(this.root, response)
+                // Send not found response
+                else this._reportNotFound(response)
+            })
+        // Send file
+        else
+            this._exists(this._filepath(request.url), (error, exists) => {
+                // Report error if there is one
+                if (error) this._reportError(error, response)
+                // Send file if it exists
+                else if (exists) this._sendFile(request.url, response)
+                // Send not found response
+                else this._reportNotFound(response)
+            })
     }
 
     /**

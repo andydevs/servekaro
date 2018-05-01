@@ -31,19 +31,25 @@ describe('Serve Karo Server', () => {
         expect(server.port).to.equal(80)
         expect(server.host).to.equal('0.0.0.0')
         expect(server.static).to.equal('public')
+        expect(server.root).to.equal('index.html')
         expect(server.notFound).to.be.null
     })
 
     // Test .configure method
-    it('can be configured using an object', () => {
+    it('can be configured using an object (and configure only settable properties)', () => {
         server.configure({
             port: 8080,
             host: 'localhost',
-            static: 'exp' })
+            root: 'main.html',
+            static: 'exp',
+            notFound: '404.html',
+            bogus: 'phony' })
         expect(server.port).to.equal(8080)
         expect(server.host).to.equal('localhost')
         expect(server.static).to.equal('exp')
-        expect(server.notFound).to.be.null
+        expect(server.root).to.equal('main.html')
+        expect(server.notFound).to.equal('404.html')
+        expect(server.bogus).to.not.exist
     })
 
     // Test ._filepath method
@@ -63,11 +69,23 @@ describe('Serve Karo Server', () => {
     // Test serving files
     it('serves files from the configured directory', (done) => {
         chai.request(server)
-            .get('/index.html')
+            .get('/example.css')
             .end((error, result) => {
                 expect(error).to.not.exist
                 expect(result).to.have.status(200)
-                expect(result.text).to.be.fromFile('exp/index.html')
+                expect(result.text).to.be.fromFile('exp/example.css')
+                done()
+            })
+    })
+
+    // Test serving root file
+    it('serves the root file when accessing root', (done) => {
+        chai.request(server)
+            .get('/')
+            .end((error, result) => {
+                expect(error).to.not.exist
+                expect(result).to.have.status(200)
+                expect(result.text).to.be.fromFile('exp/main.html')
                 done()
             })
     })
