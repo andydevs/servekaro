@@ -10,14 +10,8 @@ import http from 'http'
 import path from 'path'
 import fs from 'fs'
 
-// Defaults
-const DEFAULT_PORT = 80
-const DEFAULT_HOST = '0.0.0.0'
-const DEFAULT_STATIC = 'public'
-const DEFAULT_NOTFOUND = null
-
 // Keys that can be configured
-const CONFIG_KEYS = [ 'port', 'host', 'static', 'notFound' ]
+const CONFIG_KEYS = [ 'port', 'host', 'root', 'static', 'notFound' ]
 
 /**
  * Main server class
@@ -37,13 +31,19 @@ export default class ServeKaro extends http.Server {
         this.port = 80
         this.host = '0.0.0.0'
         this.static = 'public'
+        this.root = 'index.html'
         this.notFound = null
 
         // Bind methods
         this.configure = this.configure.bind(this)
         this.serve = this.serve.bind(this)
         this._requestHandler = this._requestHandler.bind(this)
+        this._reportError = this._reportError.bind(this)
+        this._sendFile = this._sendFile.bind(this)
+        this._reportNotFound = this._reportNotFound.bind(this)
+        this._reportNotFoundDefault = this._reportNotFoundDefault.bind(this)
         this._filepath = this._filepath.bind(this)
+        this._exists = this._exists.bind(this)
 
         // Set events
         this.on('request', this._requestHandler)
