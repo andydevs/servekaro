@@ -1,0 +1,6 @@
+{
+    "port": "8080",
+    "host": "localhost",
+    "serving": "exp",
+    "notFound": "404.html"
+}

@@ -8,7 +8,6 @@
  */
 import ServeKaro from '../lib/servekaro'
 import fs from 'fs'
-import { fileExists } from 'helper'
 
 // Config file
 const CONFIG_FILE_NAME = 'servekaro.json'
@@ -22,5 +21,7 @@ if (fs.existsSync(CONFIG_FILE_NAME))
 
 // Serve server
 server.serve(() => {
-    console.log(`Serving ${server.serving}/ at http://${server.host}:${server.port}/...`)
+    let { serving, host, port } = server;
+    console.log(`Serving '${serving}/' at 'http://${host}:${port}/'`)
+    console.log('Type ^C to terminate...');
 })
