@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "./node_modules/.bin/babel src -d lib",
-    "test": "./node_modules/.bin/mocha test --require babel-core/register --reporter spec --colors"
+    "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
   },
   "keywords": [
     "server",
@@ -15,10 +15,10 @@
   "author": "Anshul Kharbanda",
   "license": "MIT",
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.6.1",
+    "@babel/cli": "^7.0.0-beta.46",
+    "@babel/core": "^7.0.0-beta.46",
+    "@babel/preset-env": "^7.0.0-beta.46",
+    "@babel/register": "^7.0.0-beta.46",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
     "mocha": "^5.1.1"

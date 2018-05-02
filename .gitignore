@@ -57,3 +57,5 @@ typings/
 # dotenv environment variables file
 .env
 
+# Lib files will be built
+lib/

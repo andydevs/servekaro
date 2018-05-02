@@ -16,7 +16,7 @@ import fs from 'fs'
  * @param callback {Function} callback to responds to exists
  */
 export function fileExists(path, callback) {
-    fs.stat(file, (error, stat) => {
+    fs.stat(path, (error, stat) => {
         // Check error
         if (error)
             // ENOENT (Error No Entry) indicates file does not exist
@@ -43,7 +43,7 @@ export function filterKeys(object, keys) {
         // Filter out keys
         .filter(([key, value]) => keys.includes(key))
         // Map arrays to object entry
-        .map(([key, value]) => { [key]: val })
+        .map(([key, value]) => { let obj = {}; obj[key] = value; return obj })
         // Reduce object entries into single object
         .reduce((obj, entry) => Object.assign(obj, entry), {})
 }

@@ -9,7 +9,7 @@
 import http from 'http'
 import path from 'path'
 import fs from 'fs'
-import { exists, filterKeys } from './helper'
+import { fileExists, filterKeys } from './helper'
 
 // Keys that can be configured
 const CONFIG_KEYS = [ 'port', 'host', 'root', 'serving', 'notFound' ]
@@ -96,7 +96,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleRequestRoot(response) {
-        exists(this._filepath(this.root), (error, exists) => {
+        fileExists(this._filepath(this.root), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send root file if it exists
@@ -114,7 +114,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleRequestDefault(request, response) {
-        exists(this._filepath(request.url), (error, exists) => {
+        fileExists(this._filepath(request.url), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send file if it exists
@@ -176,7 +176,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleNotFoundString(response) {
-        exists(this._filepath(this.notFound), (error, exists) => {
+        fileExists(this._filepath(this.notFound), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send 404 file if it exists
@@ -194,7 +194,7 @@ export default class ServeKaro extends http.Server {
      * @param response {http.ServerResponse} the outgoing response
      */
     _handleNotFoundObject(response) {
-        exists(this._filepath(this.notFound.file), (error, exists) => {
+        fileExists(this._filepath(this.notFound.file), (error, exists) => {
             // Report error if there is one
             if (error) this._handleError(error, response)
             // Send 404 file if it exists
