@@ -1,6 +1,6 @@
 {
   "name": "servekaro",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Configurable static web server",
   "keywords": [
     "server",
@@ -9,8 +9,8 @@
   ],
   "author": "Anshul Kharbanda",
   "license": "MIT",
-  "engines" : {
-      "node": "^8.11.0"
+  "engines": {
+    "node": "^8.11.0"
   },
   "scripts": {
     "build-lib": "./node_modules/.bin/babel src/lib -d lib",
@@ -19,12 +19,12 @@
     "prepublish": "npm run build",
     "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
   },
-  "bin" : {
-      "servekaro" : "bin/servekaro"
+  "bin": {
+    "servekaro": "bin/servekaro"
   },
   "files": [
-      "lib",
-      "bin"
+    "lib",
+    "bin"
   ],
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
