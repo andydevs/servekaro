@@ -60,3 +60,5 @@ typings/
 # Output files will be built
 lib/
 !src/lib
+bin/
+!src/bin

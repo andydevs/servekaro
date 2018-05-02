@@ -2,9 +2,10 @@
   "name": "servekaro",
   "version": "0.0.0",
   "description": "Configurable static web server",
-  "main": "lib/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src/lib -d lib",
+    "build-lib": "./node_modules/.bin/babel src/lib -d lib",
+    "build-bin": "./node_modules/.bin/babel src/bin -d bin",
+    "build": "npm run build-lib && npm run build-bin",
     "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
   },
   "keywords": [
