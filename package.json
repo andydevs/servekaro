@@ -4,7 +4,7 @@
   "description": "Configurable static web server",
   "main": "lib/index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d lib",
+    "build": "./node_modules/.bin/babel src/lib -d lib",
     "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
   },
   "keywords": [
