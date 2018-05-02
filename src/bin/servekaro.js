@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Serve Karo
  *
@@ -8,6 +9,9 @@
  */
 import ServeKaro from '../lib/servekaro'
 import fs from 'fs'
+
+// Set process name
+process.title = 'servekaro'
 
 // Config file
 const CONFIG_FILE_NAME = 'servekaro.json'
@@ -24,4 +28,5 @@ server.serve(() => {
     let { serving, host, port } = server;
     console.log(`Serving '${serving}/' at 'http://${host}:${port}/'`)
     console.log('Type ^C to terminate...');
+    console.log('');
 })

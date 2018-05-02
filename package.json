@@ -14,13 +14,17 @@
   },
   "scripts": {
     "build-lib": "./node_modules/.bin/babel src/lib -d lib",
-    "build-bin": "./node_modules/.bin/babel src/bin -d bin",
+    "build-bin": "./node_modules/.bin/babel src/bin/servekaro.js -o bin/servekaro",
     "build": "npm run build-lib && npm run build-bin",
     "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
   },
   "bin" : {
       "servekaro" : "bin/servekaro"
   },
+  "files": [
+      "lib",
+      "bin"
+  ],
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.46",
     "@babel/core": "^7.0.0-beta.46",
