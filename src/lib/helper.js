@@ -43,7 +43,7 @@ export function filterKeys(object, keys) {
         // Filter out keys
         .filter(([key, value]) => keys.includes(key))
         // Map arrays to object entry
-        .map(([key, value]) => { let obj = {}; obj[key] = value; return obj })
+        .map(([key, value]) => ({ [key]: value }))
         // Reduce object entries into single object
         .reduce((obj, entry) => Object.assign(obj, entry), {})
 }
