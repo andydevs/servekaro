@@ -13,11 +13,9 @@
     "node": "^8.11.0"
   },
   "scripts": {
-    "build-lib": "./node_modules/.bin/babel src/lib -d lib",
-    "build-bin": "./node_modules/.bin/babel src/bin/servekaro.js -o bin/servekaro",
-    "build": "npm run build-lib && npm run build-bin",
-    "prepublish": "npm run build",
-    "test": "./node_modules/.bin/mocha test --require @babel/register --reporter spec --colors"
+    "build": "./node_modules/.bin/grunt build",
+    "test": "./node_modules/.bin/grunt test",
+    "prepublish": "npm run build"
   },
   "bin": {
     "servekaro": "bin/servekaro"
@@ -35,6 +33,10 @@
     "@babel/register": "^7.0.0-beta.46",
     "chai": "^4.1.2",
     "chai-http": "^4.0.0",
+    "grunt": "^1.0.2",
+    "grunt-babel": "^8.0.0-beta.0",
+    "grunt-cli": "^1.2.0",
+    "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.1.1"
   }
 }
