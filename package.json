@@ -10,7 +10,8 @@
   "author": "Anshul Kharbanda",
   "license": "MIT",
   "engines": {
-    "node": "^8.11.0"
+    "node": "^8.11.0",
+    "npm": "^4.2.0"
   },
   "scripts": {
     "build": "./node_modules/.bin/grunt build",
@@ -31,12 +32,12 @@
     "@babel/core": "^7.0.0-beta.46",
     "@babel/preset-env": "^7.0.0-beta.46",
     "@babel/register": "^7.0.0-beta.46",
-    "chai": "^4.1.2",
-    "chai-http": "^4.0.0",
     "grunt": "^1.0.2",
     "grunt-babel": "^8.0.0-beta.0",
     "grunt-cli": "^1.2.0",
     "grunt-mocha-test": "^0.13.3",
-    "mocha": "^5.1.1"
+    "mocha": "^5.1.1",
+    "chai": "^4.1.2",
+    "chai-http": "^4.0.0"
   }
 }
