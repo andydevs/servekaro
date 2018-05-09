@@ -1,5 +1,7 @@
 # Serve Karo
 
+[![Build Status](https://travis-ci.com/andydevs/servekaro.svg?branch=master)](https://travis-ci.com/andydevs/servekaro)
+
 _Ap ek application ho, to serve karo!_
 
 Serve Karo is a configurable static web server that you can deploy to production environments! With Serve Karo, you don't have to write your own webserver, simply install the package, write a `servekaro.json` file ([see below](###configuring-the-serve-karo)) and type:
