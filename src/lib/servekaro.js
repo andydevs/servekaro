@@ -29,8 +29,8 @@ export default class ServeKaro extends http.Server {
         super()
 
         // Default properties
-        this.port = 80
-        this.host = '0.0.0.0'
+        this.port = process.env.PORT || 80
+        this.host = process.env.HOST || '0.0.0.0'
         this.serving = 'public'
         this.root = 'index.html'
         this.notFound = null
