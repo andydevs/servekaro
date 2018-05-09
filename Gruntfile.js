@@ -16,10 +16,6 @@ module.exports = function (grunt) {
     // Initialize config
     grunt.initConfig({
         babel: {
-            options: {
-                sourceMap: false,
-                presets: ["@babel/preset-env"]
-            },
             dist: {
                 files: {
                     'lib/helper.js': 'src/lib/helper.js',
