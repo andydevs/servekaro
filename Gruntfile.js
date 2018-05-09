@@ -45,5 +45,5 @@ module.exports = function (grunt) {
 
     // Register tasks
     grunt.registerTask('build', ['babel'])
-    grunt.registerTask('test', ['mochaTest'])
+    grunt.registerTask('test', ['build', 'mochaTest'])
 }

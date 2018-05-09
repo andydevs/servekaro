@@ -9,7 +9,7 @@
 import chai, { expect } from 'chai'
 import chaiHttp from 'chai-http'
 import chaiHelper from './chai-helper'
-import ServeKaro from '../src/lib/servekaro'
+import ServeKaro from '../lib/servekaro'
 import path from 'path'
 import fs from 'fs'
 
