@@ -12,7 +12,23 @@ import fs from 'fs'
 import { fileExists, filterKeys } from './helper'
 
 // Keys that can be configured
-const CONFIG_KEYS = [ 'port', 'host', 'root', 'serving', 'notFound' ]
+const CONFIG_KEYS = [
+    'port',
+    'host',
+    'root',
+    'serving',
+    'notFound'
+]
+
+// Content types for different file extensions
+const contentTypeForExtension = ext => {
+    switch (ext) {
+        case '.html': return 'text/html'
+        case '.css': return 'text/css'
+        case '.js': return 'application/javascript'
+        default: return 'text/plain'
+    }
+}
 
 /**
  * Main server class
@@ -148,7 +164,9 @@ export default class ServeKaro extends http.Server {
      * @param status {int} the status to write to response
      */
     _sendFile(url, response, status=200) {
-        response.writeHead(status)
+        response.writeHead(status, {
+            'Content-Type': contentTypeForExtension(path.extname(url))
+        })
         fs.createReadStream(this._filepath(url)).pipe(response)
     }
 
