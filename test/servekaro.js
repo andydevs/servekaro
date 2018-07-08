@@ -70,10 +70,11 @@ describe('Serve Karo Server', () => {
     it('serves files from the configured directory', (done) => {
         chai.request(server)
             .get('/example.css')
-            .end((error, result) => {
+            .end((error, response) => {
                 expect(error).to.not.exist
-                expect(result).to.have.status(200)
-                expect(result.text).to.be.fromFile('exp/example.css')
+                expect(response).to.have.status(200)
+                expect(response).to.have.header('Content-Type', 'text/css')
+                expect(response.text).to.be.fromFile('exp/example.css')
                 done()
             })
     })
@@ -82,10 +83,11 @@ describe('Serve Karo Server', () => {
     it('serves the root file when accessing root', (done) => {
         chai.request(server)
             .get('/')
-            .end((error, result) => {
+            .end((error, response) => {
                 expect(error).to.not.exist
-                expect(result).to.have.status(200)
-                expect(result.text).to.be.fromFile('exp/main.html')
+                expect(response).to.have.status(200)
+                expect(response).to.have.header('Content-Type', 'text/html')
+                expect(response.text).to.be.fromFile('exp/main.html')
                 done()
             })
     })
@@ -97,10 +99,11 @@ describe('Serve Karo Server', () => {
             server.notFound = null
             chai.request(server)
                 .get('/notexistant.lmth')
-                .end((error, result) => {
+                .end((error, response) => {
                     expect(error).to.not.exist
-                    expect(result).to.have.status(404)
-                    expect(result.text).to.equal('File not found!')
+                    expect(response).to.have.status(404)
+                    expect(response).to.have.header('Content-Type', 'text/plain')
+                    expect(response.text).to.equal('File not found!')
                     done()
                 })
         })
@@ -110,10 +113,11 @@ describe('Serve Karo Server', () => {
             server.notFound = '404.html'
             chai.request(server)
                 .get('/totallynotreal.lmao')
-                .end((error, result) => {
+                .end((error, response) => {
                     expect(error).to.not.exist
-                    expect(result).to.have.status(404)
-                    expect(result.text).to.be.fromFile('exp/404.html')
+                    expect(response).to.have.status(404)
+                    expect(response).to.have.header('Content-Type', 'text/html')
+                    expect(response.text).to.be.fromFile('exp/404.html')
                     done()
                 })
         })
@@ -123,10 +127,11 @@ describe('Serve Karo Server', () => {
             server.notFound = { status: 200, file: 'index.html' }
             chai.request(server)
                 .get('/icantbelieveitsnot.butter')
-                .end((error, result) => {
+                .end((error, response) => {
                     expect(error).to.not.exist
-                    expect(result).to.have.status(200)
-                    expect(result.text).to.be.fromFile('exp/index.html')
+                    expect(response).to.have.status(200)
+                    expect(response).to.have.header('Content-Type', 'text/html')
+                    expect(response.text).to.be.fromFile('exp/index.html')
                     done()
                 })
         })
