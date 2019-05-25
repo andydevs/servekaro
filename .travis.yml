@@ -8,4 +8,5 @@ deploy:
   on:
     repo: andydevs/servekaro
     branch: master
+    tags: true
   skip_cleanup: true
