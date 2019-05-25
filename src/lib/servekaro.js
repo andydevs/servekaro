@@ -40,7 +40,7 @@ export default class ServeKaro extends http.Server {
     /**
      * Constructs a new ServeKaro
      */
-    constructor() {
+    constructor(opts={}) {
         // Call super
         super()
 
@@ -64,6 +64,8 @@ export default class ServeKaro extends http.Server {
         this._handleNotFoundObject = this._handleNotFoundObject.bind(this)
         this._handleNotFoundDefault = this._handleNotFoundDefault.bind(this)
         this._filepath = this._filepath.bind(this)
+
+        this.configure(opts)
 
         // Set events
         this.on('request', this._handleRequest)

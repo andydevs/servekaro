@@ -72,7 +72,7 @@ describe('ServeKaro.configure', () => {
 describe('ServeKaro._filepath', () => {
     // Test ._filepath method
     it('returns a filepath given an http url', () => {
-        var server = new ServeKaro()
+        var server = new ServeKaro({ serving: 'exp' })
         var filepath = server._filepath('/index.html')
         expect(filepath).to.equal(path.join('exp', 'index.html'))
     })
@@ -88,7 +88,8 @@ describe('ServeKaro.serve', () => {
         server = new ServeKaro({
             port: 8080,
             host: 'localhost',
-            serving: 'exp'
+            serving: 'exp',
+            root: 'main.html'
         })
         server.serve(done)
     })
