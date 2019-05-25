@@ -248,6 +248,7 @@ export default class ServeKaro extends http.Server {
      * @return the filepath including serving dir
      */
     _filepath(url) {
-        return path.join(this.serving, url)
+        var file = url === '/' ? this.root : url
+        return path.join(this.serving, file)
     }
 }

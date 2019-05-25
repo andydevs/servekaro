@@ -69,13 +69,26 @@ describe('ServeKaro.configure', () => {
     })
 })
 
+// Test ._filepath method
 describe('ServeKaro._filepath', () => {
-    // Test ._filepath method
+    var server
+
+    beforeEach(() => {
+        server = new ServeKaro({
+            serving: 'exp',
+            root: '/main.html'
+        })
+    })
+
     it('returns a filepath given an http url', () => {
-        var server = new ServeKaro({ serving: 'exp' })
         var filepath = server._filepath('/index.html')
         expect(filepath).to.equal(path.join('exp', 'index.html'))
     })
+
+    it('returns the root filepath if given root url', () => {
+        var filepath = server._filepath('/')
+        expect(filepath).to.equal(path.join('exp', 'main.html'))
+    });
 })
 
 
