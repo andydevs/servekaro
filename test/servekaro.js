@@ -17,26 +17,42 @@ import fs from 'fs'
 chai.use(chaiHttp)
 chai.use(chaiHelper)
 
-describe('Serve Karo Server', () => {
-    // Server handle
-    var server
-
-    // Instantiate server
-    before(() => {
-        server = new ServeKaro()
+describe('ServeKaro.constructor', () => {
+    context('when given no arguments', () => {
+        it('sets port, host, serving, and notFound properties to default values', () => {
+            var server = new ServeKaro()
+            expect(server.port).to.equal(80)
+            expect(server.host).to.equal('0.0.0.0')
+            expect(server.serving).to.equal('public')
+            expect(server.root).to.equal('index.html')
+            expect(server.notFound).to.be.null
+        })
     })
 
-    // Test default properties
-    it('contains port, host, serving, and notfound properties set to default values', () => {
-        expect(server.port).to.equal(80)
-        expect(server.host).to.equal('0.0.0.0')
-        expect(server.serving).to.equal('public')
-        expect(server.root).to.equal('index.html')
-        expect(server.notFound).to.be.null
+    context('when given properties object', () => {
+        it('sets port, host, serving, and notFound properties to given values in properties', () => {
+            var server = new ServeKaro({
+                port: 8080,
+                host: '196.168.1.23',
+                serving: 'exp',
+                root: 'home.html',
+                notFound: '404.html',
+                bogus: 'phony'
+            })
+            expect(server.port).to.equal(8080)
+            expect(server.host).to.equal('196.168.1.23')
+            expect(server.serving).to.equal('exp')
+            expect(server.root).to.equal('home.html')
+            expect(server.notFound).to.equal('404.html')
+            expect(server.bogus).to.not.exist
+        })
     })
+})
 
-    // Test .configure method
-    it('can be configured using an object (and configure only settable properties)', () => {
+
+describe('ServeKaro.configure', () => {
+    it('configures port, host, root, serving, and notFound', () => {
+        var server = new ServeKaro()
         server.configure({
             port: 8080,
             host: 'localhost',
@@ -51,23 +67,47 @@ describe('Serve Karo Server', () => {
         expect(server.notFound).to.equal('404.html')
         expect(server.bogus).to.not.exist
     })
+})
 
+describe('ServeKaro._filepath', () => {
     // Test ._filepath method
     it('returns a filepath given an http url', () => {
-        expect(server._filepath('/index.html')).to.equal(path.join('exp', 'index.html'))
+        var server = new ServeKaro()
+        var filepath = server._filepath('/index.html')
+        expect(filepath).to.equal(path.join('exp', 'index.html'))
+    })
+})
+
+
+describe('ServeKaro.serve', () => {
+    // Server handle
+    var server
+
+    // Instantiate server on each run
+    beforeEach(done => {
+        server = new ServeKaro({
+            port: 8080,
+            host: 'localhost',
+            serving: 'exp'
+        })
+        server.serve(done)
+    })
+
+    // Close server on each run
+    afterEach(() => {
+        if (server.listening) {
+            server.close()
+        }
     })
 
     // Test address info on .serve
-    it('serves on the configured port and host when .serve is called', (done) => {
-        server.serve(() => {
-            expect(server.address().port).to.equal(server.port)
-            expect(server.address().address).to.be.sameIp(server.host)
-            server.close(done)
-        })
+    it('serves on the configured port and host when .serve is called', () => {
+        expect(server.address().port).to.equal(server.port)
+        expect(server.address().address).to.be.sameIp(server.host)
     })
 
     // Test serving files
-    it('serves files from the configured directory', (done) => {
+    it('serves files from the configured directory', done => {
         chai.request(server)
             .get('/example.css')
             .end((error, response) => {
@@ -80,7 +120,7 @@ describe('Serve Karo Server', () => {
     })
 
     // Test serving root file
-    it('serves the root file when accessing root', (done) => {
+    it('serves the root file when accessing root', done => {
         chai.request(server)
             .get('/')
             .end((error, response) => {
@@ -95,7 +135,7 @@ describe('Serve Karo Server', () => {
     // Test 404 serve
     context('when given url is not found', () => {
         // Test null 404
-        it('serves default not found message with status 404 if notFound is null', (done) => {
+        it('serves default not found message with status 404 if notFound is null', done => {
             server.notFound = null
             chai.request(server)
                 .get('/notexistant.lmth')
@@ -109,7 +149,7 @@ describe('Serve Karo Server', () => {
         })
 
         // Test filename 404
-        it('serves the given notFound file with status 404 if notFound is a string filename', (done) => {
+        it('serves the given notFound file with status 404 if notFound is a string filename', done => {
             server.notFound = '404.html'
             chai.request(server)
                 .get('/totallynotreal.lmao')
@@ -123,7 +163,7 @@ describe('Serve Karo Server', () => {
         })
 
         // Test object 404
-        it('serves the notFound file with notFound status if notFound is object with filename and status', (done) => {
+        it('serves the notFound file with notFound status if notFound is object with filename and status', done => {
             server.notFound = { status: 200, file: 'index.html' }
             chai.request(server)
                 .get('/icantbelieveitsnot.butter')
