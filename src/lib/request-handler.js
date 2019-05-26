@@ -58,7 +58,8 @@ export function filepath(config, url) {
  * @param {number} status optional status to send (default: 200)
  */
 export function sendFile(config, url, response, status=200) {
-    var contentType = contentTypeForExtension(path.extname(url))
+    var filename = filepath(config, url)
+    var contentType = contentTypeForExtension(path.extname(filename))
     response.writeHead(status, { 'Content-Type' : contentType })
     fs.createReadStream(filepath(config, url)).pipe(response)
 }

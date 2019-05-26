@@ -24,6 +24,7 @@ import {
     handleNotFoundString,
     handleNotFoundDefault
 } from '../lib/request-handler'
+import TestResponse from './test-response'
 
 // Configure chai
 chai.use(chaiHttp)
@@ -48,9 +49,37 @@ describe('buildRequestHandler', () => {
 })
 
 describe('sendFile', () => {
-    it('writes file from url')
-    it('writes status if status is given')
-    it('writes root file from config if root url given')
+    var config = { serving: 'exp', root: 'main.html' }
+    it('writes file from url', (done) => {
+        var res = new TestResponse()
+        res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.data).to.be.fromFile('exp/index.html')
+            done()
+        })
+        sendFile(config, '/index.html', res)
+    })
+    it('writes status if status is given', (done) => {
+        var res = new TestResponse()
+        res.on('finish', () => {
+            expect(res.status).to.equal(301)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.data).to.be.fromFile('exp/index.html')
+            done()
+        })
+        sendFile(config, '/index.html', res, 301)
+    })
+    it('writes root file from config if root url given', (done) => {
+        var res = new TestResponse()
+        res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.data).to.be.fromFile('exp/main.html')
+            done()
+        })
+        sendFile(config, '/', res)
+    })
 })
 
 describe('handleError', () => {
