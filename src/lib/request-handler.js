@@ -18,7 +18,7 @@ import { fileExists, filepath, sendFile } from './helper'
  *
  * @return {function} request handler
  */
-export function buildRequestHandler(config) {
+export default function buildRequestHandler(config) {
     var handleNotFound = getHandleNotFoundForConfig(config)
     return function (request, response) {
         handleRequest(config, request, response, handleNotFound)
