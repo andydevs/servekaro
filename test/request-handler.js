@@ -25,9 +25,6 @@ chai.use(chaiHttp)
 chai.use(chaiSinon)
 chai.use(chaiHelper)
 
-describe('buildRequestHandler', () => {
-    it('returns handler that calls handleRequest')
-})
 
 describe('handleRequest', () => {
     var config = { serving: 'exp', root: 'main.html' }
