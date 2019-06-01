@@ -105,7 +105,7 @@ describe('handleError', () => {
     beforeEach(() => {
         res = new TestResponse()
     })
-    
+
     it('sets status to 500', (done) => {
         res.on('finish', () => {
             expect(res.status).to.equal(500)
@@ -136,15 +136,71 @@ describe('handleNotFound', () => {
 })
 
 describe('handleNotFoundObject', () => {
-    it('sets status to status of object')
-    it('sets content type to type of filename')
-    it('writes text from filename of object to response')
+    var config = {
+        serving: 'exp',
+        notFound: {
+            status: 200,
+            file: 'index.html'
+        }
+    }
+    var res
+
+    beforeEach(() => {
+        res = new TestResponse()
+    })
+
+    it('sets status to status of object', (done) => {
+        res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            done()
+        })
+        handleNotFoundObject(config, res)
+    })
+    it('sets content type to type of filename', (done) => {
+        res.on('finish', () => {
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            done()
+        })
+        handleNotFoundObject(config, res)
+    })
+    it('writes text from filename of object to response', (done) => {
+        res.on('finish', () => {
+            expect(res.data).to.be.fromFile('exp/index.html')
+            done()
+        })
+        handleNotFoundObject(config, res)
+    })
 })
 
 describe('handleNotFoundString', () => {
-    it('sets status to 404')
-    it('sets content type to type of filename')
-    it('writes text from given file name to response')
+    var config = { serving: 'exp', notFound: '404.html' }
+    var res
+
+    beforeEach(() => {
+        res = new TestResponse()
+    })
+
+    it('sets status to 404', (done) => {
+        res.on('finish', () => {
+            expect(res.status).to.equal(404)
+            done()
+        })
+        handleNotFoundString(config, res)
+    })
+    it('sets content type to type of filename', (done) => {
+        res.on('finish', () => {
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            done()
+        })
+        handleNotFoundString(config, res)
+    })
+    it('writes text from given file name to response', (done) => {
+        res.on('finish', () => {
+            expect(res.data).to.be.fromFile('exp/404.html')
+            done()
+        })
+        handleNotFoundString(config, res)
+    })
 })
 
 describe('handleNotFoundDefault', () => {

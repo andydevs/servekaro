@@ -103,7 +103,7 @@ export function handleNotFound(config, response) {
  * @param {ServerResponse} response response object
  */
 export function handleNotFoundObject(config, response) {
-
+    sendFile(config, config.notFound.file, response, config.notFound.status)
 }
 
 /**
@@ -113,7 +113,7 @@ export function handleNotFoundObject(config, response) {
  * @param {ServerResponse} response response object
  */
 export function handleNotFoundString(config, response) {
-
+    sendFile(config, config.notFound, response, 404)
 }
 
 /**
