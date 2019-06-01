@@ -7,6 +7,51 @@
  * Created: 4 - 24 - 2017
  */
 import fs from 'fs'
+import path from 'path'
+
+/**
+ * Returns http content type for file extension
+ *
+ * @param {string} ext file extension
+ *
+ * @return {string} http content type
+ */
+function contentTypeForExtension(ext) {
+    switch (ext) {
+        case '.html': return 'text/html'
+        case '.css': return 'text/css'
+        case '.js': return 'application/javascript'
+        default: return 'text/plain'
+    }
+}
+
+/**
+ * Returns the filepath including serving dir given the url and config
+ *
+ * @param {object} config servekaro config
+ * @param {String} url the url from the request
+ *
+ * @return the filepath including serving dir
+ */
+export function filepath(config, url) {
+    var file = url === '/' ? config.root : url
+    return path.join(config.serving, file)
+}
+
+/**
+ * Writes file given by url to response according to config
+ *
+ * @param {object} config servekaro config object
+ * @param {String} url url from request
+ * @param {ServerResponse} response response object
+ * @param {number} status optional status to send (default: 200)
+ */
+export function sendFile(config, url, response, status=200) {
+    var filename = filepath(config, url)
+    var contentType = contentTypeForExtension(path.extname(filename))
+    response.writeHead(status, { 'Content-Type' : contentType })
+    fs.createReadStream(filepath(config, url)).pipe(response)
+}
 
 /**
  * Check if the file exists and return boolean

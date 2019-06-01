@@ -21,6 +21,7 @@ module.exports = function (grunt) {
                     'lib/helper.js': 'src/lib/helper.js',
                     'lib/servekaro.js': 'src/lib/servekaro.js',
                     'lib/request-handler.js': 'src/lib/request-handler.js',
+                    'lib/handle-not-found.js': 'src/lib/handle-not-found.js',
                     'bin/servekaro': 'src/bin/servekaro.js'
                 }
             }
