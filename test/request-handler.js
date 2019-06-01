@@ -35,34 +35,48 @@ describe('handleRequestWithNotFoundHandler', () => {
     var req, res
 
     beforeEach(() => {
-        handleNotFound = sinon.spy()
+        handleNotFound = sinon.stub().callsFake((config, response) => {
+            response.end()
+        })
         res = new TestResponse()
     })
 
     it('sends file at request.url if file exists', (done) => {
         req = new TestRequest('/index.html')
         res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.data).to.be.fromFile('exp/index.html')
+            expect(handleNotFound).to.not.have.been.called
             done()
         })
         handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
     })
     it('sends root file if root url given', (done) => {
-        req = new TestRequest('/index.html')
+        req = new TestRequest('/')
         res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.data).to.be.fromFile('exp/main.html')
+            expect(handleNotFound).to.not.have.been.called
             done()
         })
         handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
     })
     it('calls handleNotFound if file not found', (done) => {
-        req = new TestRequest('/index.html')
+        req = new TestRequest('/foo.bar')
         res.on('finish', () => {
+            expect(handleNotFound).to.have.been.calledWith(config, res)
             done()
         })
         handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
     })
     it('sends error if there was an error', (done) => {
-        req = new TestRequest('/index.html')
+        req = new TestRequest(undefined)
         res.on('finish', () => {
+            expect(res.status).to.equal(500)
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/plain')
+            expect(res.data).to.equal('Internal server error!')
             done()
         })
         handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
