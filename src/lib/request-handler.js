@@ -21,6 +21,18 @@ export function buildRequestHandler(config) {
 }
 
 /**
+ * Handle request for url and config object
+ *
+ * @param {object} config servekaro config
+ * @param {ClientRequest} request request object
+ * @param {ServerResponse} response response object
+ * @param {function} handleNotFound handler for file not found
+ */
+export function handleRequestWithNotFoundHandler(config, request, response, handleNotFound) {
+
+}
+
+/**
  * Write internal server error to response
  *
  * @param {ServerResponse} response response object

@@ -9,21 +9,64 @@
 import chai, { expect } from 'chai'
 import sinon from 'sinon'
 import chaiHttp from 'chai-http'
+import chaiSinon from 'sinon-chai'
 import chaiHelper from './chai-helper'
 import path from 'path'
 import fs from 'fs'
 import {
     buildRequestHandler,
-    handleError,
+    handleRequestWithNotFoundHandler,
+    handleError
 } from '../lib/request-handler'
-import { TestResponse } from './test-http'
+import { TestRequest, TestResponse } from './test-http'
 
 // Configure chai
 chai.use(chaiHttp)
+chai.use(chaiSinon)
 chai.use(chaiHelper)
 
 describe('buildRequestHandler', () => {
     it('returns handler that calls handleRequest')
+})
+
+describe('handleRequestWithNotFoundHandler', () => {
+    var config = { serving: 'exp', root: 'main.html' }
+    var handleNotFound
+    var req, res
+
+    beforeEach(() => {
+        handleNotFound = sinon.spy()
+        res = new TestResponse()
+    })
+
+    it('sends file at request.url if file exists', (done) => {
+        req = new TestRequest('/index.html')
+        res.on('finish', () => {
+            done()
+        })
+        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+    })
+    it('sends root file if root url given', (done) => {
+        req = new TestRequest('/index.html')
+        res.on('finish', () => {
+            done()
+        })
+        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+    })
+    it('calls handleNotFound if file not found', (done) => {
+        req = new TestRequest('/index.html')
+        res.on('finish', () => {
+            done()
+        })
+        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+    })
+    it('sends error if there was an error', (done) => {
+        req = new TestRequest('/index.html')
+        res.on('finish', () => {
+            done()
+        })
+        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+    })
 })
 
 describe('handleError', () => {
