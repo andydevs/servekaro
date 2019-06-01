@@ -8,11 +8,8 @@
  */
 import fs from 'fs'
 import path from 'path'
-import {
-    fileExists,
-    filepath,
-    sendFile
-} from './helper'
+import getHandleNotFoundForConfig from './handle-not-found'
+import { fileExists, filepath, sendFile } from './helper'
 
 /**
  * Build request handler from config
@@ -22,7 +19,10 @@ import {
  * @return {function} request handler
  */
 export function buildRequestHandler(config) {
-
+    var handleNotFound = getHandleNotFoundForConfig(config)
+    return function (request, response) {
+        handleRequest(config, request, response, handleNotFound)
+    }
 }
 
 /**
@@ -33,7 +33,7 @@ export function buildRequestHandler(config) {
  * @param {ServerResponse} response response object
  * @param {function} handleNotFound handler for file not found
  */
-export function handleRequestWithNotFoundHandler(config, request, response, handleNotFound) {
+export function handleRequest(config, request, response, handleNotFound) {
     try {
         var fpath = filepath(config, request.url)
         fileExists(fpath, (error, exists) => {

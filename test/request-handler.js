@@ -15,7 +15,7 @@ import path from 'path'
 import fs from 'fs'
 import {
     buildRequestHandler,
-    handleRequestWithNotFoundHandler,
+    handleRequest,
     handleError
 } from '../lib/request-handler'
 import { TestRequest, TestResponse } from './test-http'
@@ -29,7 +29,7 @@ describe('buildRequestHandler', () => {
     it('returns handler that calls handleRequest')
 })
 
-describe('handleRequestWithNotFoundHandler', () => {
+describe('handleRequest', () => {
     var config = { serving: 'exp', root: 'main.html' }
     var handleNotFound
     var req, res
@@ -50,7 +50,7 @@ describe('handleRequestWithNotFoundHandler', () => {
             expect(handleNotFound).to.not.have.been.called
             done()
         })
-        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+        handleRequest(config, req, res, handleNotFound)
     })
     it('sends root file if root url given', (done) => {
         req = new TestRequest('/')
@@ -61,7 +61,7 @@ describe('handleRequestWithNotFoundHandler', () => {
             expect(handleNotFound).to.not.have.been.called
             done()
         })
-        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+        handleRequest(config, req, res, handleNotFound)
     })
     it('calls handleNotFound if file not found', (done) => {
         req = new TestRequest('/foo.bar')
@@ -69,7 +69,7 @@ describe('handleRequestWithNotFoundHandler', () => {
             expect(handleNotFound).to.have.been.calledWith(config, res)
             done()
         })
-        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+        handleRequest(config, req, res, handleNotFound)
     })
     it('sends error if there was an error', (done) => {
         req = new TestRequest(undefined)
@@ -79,7 +79,7 @@ describe('handleRequestWithNotFoundHandler', () => {
             expect(res.data).to.equal('Internal server error!')
             done()
         })
-        handleRequestWithNotFoundHandler(config, req, res, handleNotFound)
+        handleRequest(config, req, res, handleNotFound)
     })
 })
 
