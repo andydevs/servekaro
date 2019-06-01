@@ -11,6 +11,24 @@ import path from 'path'
 import { sendFile } from './helper'
 
 /**
+ * Return appropriate not found handler for config
+ *
+ * @param {object} config servekaro config
+ *
+ * @return {function} not found handler for config
+ */
+export default function getHandleNotFoundForConfig(config) {
+    switch (typeof(config.notFound)) {
+        case 'string':
+            return handleNotFoundString;
+        case 'object':
+            return handleNotFoundObject;
+        default:
+            return handleNotFoundDefault;
+    }
+}
+
+/**
  * Write object not found to response
  *
  * @param {object} config servekaro config

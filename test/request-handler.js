@@ -9,7 +9,6 @@
 import chai, { expect } from 'chai'
 import sinon from 'sinon'
 import chaiHttp from 'chai-http'
-import chaiSinon from 'sinon-chai'
 import chaiHelper from './chai-helper'
 import path from 'path'
 import fs from 'fs'
@@ -22,7 +21,6 @@ import { TestResponse } from './test-http'
 // Configure chai
 chai.use(chaiHttp)
 chai.use(chaiHelper)
-chai.use(chaiSinon)
 
 describe('buildRequestHandler', () => {
     it('returns handler that calls handleRequest')

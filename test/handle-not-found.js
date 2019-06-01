@@ -12,12 +12,27 @@ import chaiHttp from 'chai-http'
 import chaiHelper from './chai-helper'
 import path from 'path'
 import fs from 'fs'
-import {
+import getHandleNotFoundForConfig, {
     handleNotFoundObject,
     handleNotFoundString,
     handleNotFoundDefault
 } from '../lib/handle-not-found'
 import { TestResponse } from './test-http'
+
+describe('getHandleNotFoundForConfig', () => {
+    var configDef = { }
+    var configStr = { notFound: '404.html' }
+    var configObj = { notFound: { status: 200, file: 'index.html' } }
+    it('returns handleNotFoundObject if notFound is object', () => {
+        expect(getHandleNotFoundForConfig(configObj)).to.equal(handleNotFoundObject)
+    })
+    it('returns handleNotFoundString if notFound is string', () => {
+        expect(getHandleNotFoundForConfig(configStr)).to.equal(handleNotFoundString)
+    })
+    it('returns handleNotFoundDefault if notFound doesn\'t exist', () => {
+        expect(getHandleNotFoundForConfig(configDef)).to.equal(handleNotFoundDefault)
+    })
+})
 
 describe('handleNotFoundObject', () => {
     var config = {
