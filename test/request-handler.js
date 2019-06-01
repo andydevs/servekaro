@@ -115,7 +115,7 @@ describe('handleError', () => {
     })
     it('sets content-type to text/plain', (done) => {
         res.on('finish', () => {
-            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/plain')
             done()
         })
         handleError(res)

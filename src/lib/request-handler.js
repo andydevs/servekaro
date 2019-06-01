@@ -81,7 +81,9 @@ export function handleRequest(config, request, response) {
  * @param {ServerResponse} response response object
  */
 export function handleError(response) {
-
+    response.writeHead(500, { 'Content-Type' : 'text/plain' })
+    response.write('Internal server error!')
+    response.end()
 }
 
 /**
