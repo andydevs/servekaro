@@ -24,7 +24,7 @@ import {
     handleNotFoundString,
     handleNotFoundDefault
 } from '../lib/request-handler'
-import TestResponse from './test-response'
+import { TestResponse } from './test-http-structures'
 
 // Configure chai
 chai.use(chaiHttp)

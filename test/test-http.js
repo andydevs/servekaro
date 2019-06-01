@@ -8,7 +8,10 @@
  */
 import { Writable } from 'stream';
 
-export default class TestResponse extends Writable {
+/**
+ * Test Response. Implementes writable functionality and writeHead
+ */
+export class TestResponse extends Writable {
     constructor(opts={}) {
         super(opts)
         this.data = ''
@@ -24,5 +27,14 @@ export default class TestResponse extends Writable {
     _write(chunk, encoding='utf-8', callback=(()=>{})) {
         this.data += chunk
         callback()
+    }
+}
+
+/**
+ * Test request. Implements url.
+ */
+export class TestRequest {
+    constructor(url) {
+        this.url = url
     }
 }
