@@ -24,7 +24,7 @@ import {
     handleNotFoundString,
     handleNotFoundDefault
 } from '../lib/request-handler'
-import { TestResponse } from './test-http-structures'
+import { TestResponse } from './test-http'
 
 // Configure chai
 chai.use(chaiHttp)
@@ -50,8 +50,13 @@ describe('buildRequestHandler', () => {
 
 describe('sendFile', () => {
     var config = { serving: 'exp', root: 'main.html' }
+    var res
+
+    beforeEach(() => {
+        res = new TestResponse()
+    })
+
     it('writes file from url', (done) => {
-        var res = new TestResponse()
         res.on('finish', () => {
             expect(res.status).to.equal(200)
             expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
@@ -61,7 +66,6 @@ describe('sendFile', () => {
         sendFile(config, '/index.html', res)
     })
     it('writes status if status is given', (done) => {
-        var res = new TestResponse()
         res.on('finish', () => {
             expect(res.status).to.equal(301)
             expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
@@ -71,7 +75,6 @@ describe('sendFile', () => {
         sendFile(config, '/index.html', res, 301)
     })
     it('writes root file from config if root url given', (done) => {
-        var res = new TestResponse()
         res.on('finish', () => {
             expect(res.status).to.equal(200)
             expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
@@ -83,9 +86,30 @@ describe('sendFile', () => {
 })
 
 describe('handleError', () => {
-    it('sets status to 500')
-    it('sets content-type to text/plain')
-    it('writes server error text to response')
+    var res
+
+    beforeEach(() => {
+        res = new TestResponse()
+    })
+
+    it('sets status to 500', (done) => {
+        res.on('finish', () => {
+            expect(res.status).to.equal(500)
+            done()
+        })
+    })
+    it('sets content-type to text/plain', (done) => {
+        res.on('finish', () => {
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            done()
+        })
+    })
+    it('writes server error text to response', (done) => {
+        res.on('finish', () => {
+            expect(res.data).to.equal('Internal server error!')
+            done()
+        })
+    })
 })
 
 describe('handleNotFound', () => {
