@@ -122,5 +122,7 @@ export function handleNotFoundString(config, response) {
  * @param {ServerResponse} response response object
  */
 export function handleNotFoundDefault(response) {
-
+    response.writeHead(404, { 'Content-Type' : 'text/plain' })
+    response.write('File not found!')
+    response.end()
 }

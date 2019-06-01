@@ -105,7 +105,7 @@ describe('handleError', () => {
     beforeEach(() => {
         res = new TestResponse()
     })
-
+    
     it('sets status to 500', (done) => {
         res.on('finish', () => {
             expect(res.status).to.equal(500)
@@ -148,7 +148,31 @@ describe('handleNotFoundString', () => {
 })
 
 describe('handleNotFoundDefault', () => {
-    it('sets status to 404')
-    it('sets content type to text/plain')
-    it('writes not found text to response')
+    var res
+
+    beforeEach(() => {
+        res = new TestResponse()
+    })
+
+    it('sets status to 404', (done) => {
+        res.on('finish', () => {
+            expect(res.status).to.equal(404)
+            done()
+        })
+        handleNotFoundDefault(res)
+    })
+    it('sets content type to text/plain', (done) => {
+        res.on('finish', () => {
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/plain')
+            done()
+        })
+        handleNotFoundDefault(res)
+    })
+    it('writes not found text to response', (done) => {
+        res.on('finish', () => {
+            expect(res.data).to.equal('File not found!')
+            done()
+        })
+        handleNotFoundDefault(res)
+    })
 })
