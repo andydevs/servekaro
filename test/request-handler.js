@@ -48,6 +48,11 @@ describe('buildRequestHandler', () => {
     it('returns handler that calls handleRequest')
 })
 
+describe('handleRequest', () => {
+    it('sends file according to request object')
+    it('sends error response if error is trigered')
+})
+
 describe('sendFile', () => {
     var config = { serving: 'exp', root: 'main.html' }
     var res
@@ -58,30 +63,39 @@ describe('sendFile', () => {
 
     it('writes file from url', (done) => {
         res.on('finish', () => {
-            expect(res.status).to.equal(200)
-            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
             expect(res.data).to.be.fromFile('exp/index.html')
             done()
         })
         sendFile(config, '/index.html', res)
     })
-    it('writes status if status is given', (done) => {
-        res.on('finish', () => {
-            expect(res.status).to.equal(301)
-            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
-            expect(res.data).to.be.fromFile('exp/index.html')
-            done()
-        })
-        sendFile(config, '/index.html', res, 301)
-    })
     it('writes root file from config if root url given', (done) => {
         res.on('finish', () => {
-            expect(res.status).to.equal(200)
-            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
             expect(res.data).to.be.fromFile('exp/main.html')
             done()
         })
         sendFile(config, '/', res)
+    })
+    it('sets content type to type of file being sent', (done) => {
+        res.on('finish', () => {
+            expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
+            done()
+        })
+        sendFile(config, '/index.html', res)
+    })
+    it('sets status to 200 if status is not given', (done) => {
+        res.on('finish', () => {
+            expect(res.status).to.equal(200)
+            done()
+        })
+        sendFile(config, '/index.html', res)
+    })
+    it('sets status to status if status is given', (done) => {
+        var status = 301
+        res.on('finish', () => {
+            expect(res.status).to.equal(status)
+            done()
+        })
+        sendFile(config, '/index.html', res, status)
     })
 })
 
@@ -97,18 +111,21 @@ describe('handleError', () => {
             expect(res.status).to.equal(500)
             done()
         })
+        handleError(res)
     })
     it('sets content-type to text/plain', (done) => {
         res.on('finish', () => {
             expect(res.headers).to.have.property('Content-Type').that.equals('text/html')
             done()
         })
+        handleError(res)
     })
     it('writes server error text to response', (done) => {
         res.on('finish', () => {
             expect(res.data).to.equal('Internal server error!')
             done()
         })
+        handleError(res)
     })
 })
 
