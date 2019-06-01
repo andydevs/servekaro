@@ -51,9 +51,10 @@ export function handleNotFoundString(config, response) {
 /**
  * Write default not found to response
  *
+ * @param {object} config servekaro config
  * @param {ServerResponse} response response object
  */
-export function handleNotFoundDefault(response) {
+export function handleNotFoundDefault(config, response) {
     response.writeHead(404, { 'Content-Type' : 'text/plain' })
     response.write('File not found!')
     response.end()

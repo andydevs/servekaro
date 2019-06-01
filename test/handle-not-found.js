@@ -103,6 +103,7 @@ describe('handleNotFoundString', () => {
 })
 
 describe('handleNotFoundDefault', () => {
+    var config = { }
     var res
 
     beforeEach(() => {
@@ -114,20 +115,20 @@ describe('handleNotFoundDefault', () => {
             expect(res.status).to.equal(404)
             done()
         })
-        handleNotFoundDefault(res)
+        handleNotFoundDefault(config, res)
     })
     it('sets content type to text/plain', (done) => {
         res.on('finish', () => {
             expect(res.headers).to.have.property('Content-Type').that.equals('text/plain')
             done()
         })
-        handleNotFoundDefault(res)
+        handleNotFoundDefault(config, res)
     })
     it('writes not found text to response', (done) => {
         res.on('finish', () => {
             expect(res.data).to.equal('File not found!')
             done()
         })
-        handleNotFoundDefault(res)
+        handleNotFoundDefault(config, res)
     })
 })
