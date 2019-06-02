@@ -12,6 +12,7 @@ import fs from 'fs'
 const defaultConfig = {
     host: { env: 'HOST', default: '0.0.0.0' },
     port: { env: 'PORT', default: 80 },
+    serving: 'public',
     root: 'index.html'
 }
 

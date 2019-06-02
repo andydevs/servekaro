@@ -19,6 +19,7 @@ describe('makeConfig', () => {
         expect(config.host).to.have.property('default').that.equals('0.0.0.0')
         expect(config.port).to.have.property('env').that.equals('PORT')
         expect(config.port).to.have.property('default').that.equals(80)
+        expect(config.serving).to.equal('public')
         expect(config.root).to.equal('index.html')
     })
     it('returns config file from json if file is found', () => {
