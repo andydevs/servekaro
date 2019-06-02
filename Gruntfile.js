@@ -23,7 +23,6 @@ module.exports = function (grunt) {
                     'lib/request-handler.js': 'src/lib/request-handler.js',
                     'lib/handle-not-found.js': 'src/lib/handle-not-found.js',
                     'lib/make-config.js': 'src/lib/make-config.js',
-                    'lib/servekaro-new.js': 'src/lib/servekaro-new.js',
                     'bin/servekaro': 'src/bin/servekaro.js'
                 }
             }
