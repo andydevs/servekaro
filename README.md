@@ -4,7 +4,7 @@
 
 _Ap ek application ho, to serve karo!_
 
-Serve Karo is a configurable static web server that you can deploy to production environments! With Serve Karo, you don't have to write your own webserver, simply install the package, write a `servekaro.json` file ([see below](###configuring-the-serve-karo)) and type:
+Serve Karo is a configurable static web server that you can deploy to production environments! With Serve Karo, you don't have to write your own webserver, simply install the package and type:
 
     $ servekaro
 
@@ -34,13 +34,13 @@ Serve Karo is configured by a `servekaro.json` file in the project directory.
 
 The properties that can be set are as follows:
 
-| Property | Description                                         | Default    |
-|:---------|:----------------------------------------------------|:-----------|
-| port     | The port to serve on                                | 80         |
-| host     | The host (or IP address) to serve on                | 0.0.0.0    |
-| serving  | The directory being served                          | public     |
-| root     | The file to serve when the root url is requested    | index.html |
-| notFound | The file to serve when url is not found (see below) | null       |
+| Property | Description                                         | Default          |
+|:---------|:----------------------------------------------------|:-----------------|
+| port     | The port to serve on                                | $PORT or 80      |
+| host     | The host (or IP address) to serve on                | $HOST or 0.0.0.0 |
+| serving  | The directory being served                          | public           |
+| root     | The file to serve when the root url is requested    | index.html       |
+| notFound | The file to serve when url is not found (see below) | null             |
 
 #### The 'notFound' property
 
@@ -64,6 +64,25 @@ You can also specify an object for the `notFound` property containing a `file` p
 ```
 
 If the `notFound` property is not set, the server will return the default 404 `File not found!` message.
+
+### Environment variables
+
+The `host` and `port` properties can be configured from environment variables! The format is as follows:
+
+```json
+{
+    "host": {
+        "env": "HOST",
+        "default": "0.0.0.0"
+    },
+    "port": {
+        "env": "PORT",
+        "default": 80
+    }
+}
+```
+
+Be sure to add the `default` parameter to ensure that the server can run if the environment variable is not configured.
 
 ### Starting the server
 
