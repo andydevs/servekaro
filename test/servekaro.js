@@ -12,7 +12,7 @@ import chaiHttp from 'chai-http'
 import chaiHelper from './chai-helper'
 import path from 'path'
 import fs from 'fs'
-import servekaro, { resolve, servebanado } from '../lib/servekaro-new'
+import servekaro, { resolve, servebanado } from '../lib/servekaro'
 require('dotenv').config()
 
 // Configure chai

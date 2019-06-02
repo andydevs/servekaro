@@ -1,6 +1,6 @@
 {
   "name": "servekaro",
-  "version": "0.1.0",
+  "version": "0.2.1",
   "description": "Configurable static web server",
   "keywords": [
     "server",
