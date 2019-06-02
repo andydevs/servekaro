@@ -18,7 +18,7 @@ module.exports = function (grunt) {
         babel: {
             dist: {
                 files: {
-                    'lib/helper.js': 'src/lib/helper.js',
+                    'lib/files.js': 'src/lib/files.js',
                     'lib/servekaro.js': 'src/lib/servekaro.js',
                     'lib/request-handler.js': 'src/lib/request-handler.js',
                     'lib/handle-not-found.js': 'src/lib/handle-not-found.js',

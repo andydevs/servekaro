@@ -12,7 +12,7 @@ import chaiHttp from 'chai-http'
 import chaiHelper from './chai-helper'
 import path from 'path'
 import fs from 'fs'
-import { filepath, sendFile } from '../lib/helper'
+import { filepath, sendFile } from '../lib/files'
 import { TestResponse } from './test-http'
 
 // Configure chai

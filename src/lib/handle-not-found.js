@@ -8,7 +8,7 @@
  */
 import fs from 'fs'
 import path from 'path'
-import { sendFile } from './helper'
+import { sendFile } from './files'
 
 /**
  * Return appropriate not found handler for config

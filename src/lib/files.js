@@ -74,21 +74,3 @@ export function fileExists(path, callback) {
         else callback(null, false)
     })
 }
-
-/**
- * Filters the given keys out of the given object
- *
- * @param object the object to filter
- * @param keys the keys to filter out
- *
- * @return the filtered object
- */
-export function filterKeys(object, keys) {
-    return Object.entries(object)
-        // Filter out keys
-        .filter(([key, value]) => keys.includes(key))
-        // Map arrays to object entry
-        .map(([key, value]) => ({ [key]: value }))
-        // Reduce object entries into single object
-        .reduce((obj, entry) => Object.assign(obj, entry), {})
-}

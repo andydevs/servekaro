@@ -9,7 +9,7 @@
 import fs from 'fs'
 import path from 'path'
 import getHandleNotFoundForConfig from './handle-not-found'
-import { fileExists, filepath, sendFile } from './helper'
+import { fileExists, filepath, sendFile } from './files'
 
 /**
  * Build request handler from config
